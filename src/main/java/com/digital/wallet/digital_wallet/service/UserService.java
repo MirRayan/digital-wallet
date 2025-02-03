@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +22,14 @@ public class UserService {
     public Users addNewUser(UserRegistration userRegistration) {
 
         Users savedUser = usersRepository.save(convertToUsers(userRegistration));
+
+        return savedUser;
+
+    }
+
+    public Users updateUser(Users users) {
+
+        Users savedUser = usersRepository.save(users);
 
         return savedUser;
 
@@ -48,6 +57,13 @@ public class UserService {
 
     }
 
+    public Optional<Users> findById(String id) {
+        return usersRepository.findById(id);
+    }
+
+    public List<Users> getAllUser() {
+        return usersRepository.findAll();
+    }
 }
 
 
