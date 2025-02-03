@@ -3,14 +3,19 @@ package com.digital.wallet.digital_wallet.controller;
 import com.digital.wallet.digital_wallet.dtos.Users.RegistrationRequest;
 import com.digital.wallet.digital_wallet.dtos.Users.UserInfoResponse;
 import com.digital.wallet.digital_wallet.dtos.Users.UserRegistration;
+import com.digital.wallet.digital_wallet.entity.Users.Currency;
 import com.digital.wallet.digital_wallet.entity.Users.UserType;
 import com.digital.wallet.digital_wallet.entity.Users.Users;
+import com.digital.wallet.digital_wallet.entity.Users.Wallet;
 import com.digital.wallet.digital_wallet.exception.BadRequestException;
 import com.digital.wallet.digital_wallet.response.BaseResponse;
 import com.digital.wallet.digital_wallet.response.ErrorResponse;
+import com.digital.wallet.digital_wallet.service.CurrencyService;
 import com.digital.wallet.digital_wallet.service.UserService;
+import com.digital.wallet.digital_wallet.service.WalletService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
@@ -20,13 +25,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
+@AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final WalletService walletService;
+    private final CurrencyService currencyService;
 
     @PostMapping("/registration")
     public ResponseEntity<?> userRegistration(@Valid @RequestBody UserRegistration userRegistration) {
@@ -36,15 +40,39 @@ public class UserController {
         if (optionalUsers.isPresent()) {
             return new ResponseEntity<>(new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST, "user exists "), HttpStatus.BAD_REQUEST);
         } else {
-            Users newUser = userService.addNewUser(userRegistration);
-            return new ResponseEntity<>(new BaseResponse(newUser, HttpServletResponse.SC_CREATED, null), HttpStatus.OK);
+
+            Wallet tempWallet = new Wallet();
+            Optional<Currency> currency = currencyService.findById("3398dbd7-70d1-4c5c-a100-bfdd62c94c06");
+
+            if (currency.isPresent()){
+                tempWallet.setCurrency(currency.get());
+                tempWallet.setAmount(0);
+
+                Wallet wallet = walletService.createWallet(tempWallet);
+
+                Users convertToUser = userService.convertToUsers(userRegistration);
+                convertToUser.setWallet(wallet);
+
+                Users newUser = userService.addNewUser(convertToUser);
+
+                tempWallet.setUserId(newUser.getId());
+
+                walletService.updateWallet(wallet);
+
+                newUser = userService.updateUser(newUser);
+
+                return new ResponseEntity<>(new BaseResponse(newUser, HttpServletResponse.SC_CREATED, null), HttpStatus.OK);
+
+            } else {
+                return new ResponseEntity<>(new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST, "Currency not Available"), HttpStatus.BAD_REQUEST);
+            }
 
         }
 
     }
 
     @PutMapping("/update")
-    public Users updateUser(Users user) {
+    public Users updateUser(@RequestBody Users user) {
         return userService.updateUser(user);
     }
 

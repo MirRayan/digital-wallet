@@ -19,9 +19,9 @@ public class UserService {
     private final UsersRepository usersRepository;
     private final UsersTypeService usersTypeService;
 
-    public Users addNewUser(UserRegistration userRegistration) {
+    public Users addNewUser(Users users) {
 
-        Users savedUser = usersRepository.save(convertToUsers(userRegistration));
+        Users savedUser = usersRepository.save(users);
 
         return savedUser;
 
@@ -29,7 +29,7 @@ public class UserService {
 
     public Users updateUser(Users users) {
 
-        Users savedUser = usersRepository.save(users);
+        Users savedUser = addNewUser(users);
 
         return savedUser;
 

@@ -20,7 +20,7 @@ public class Users extends AuditEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String userId;
+    private String id;
 
     @Column(name = "email")
     @JsonProperty("email")
@@ -58,8 +58,10 @@ public class Users extends AuditEntity {
     @Column(name = "otp")
     private String otp;
 
-    @Column(name = "wallet_id")
-    private String walletId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "wallet_id", referencedColumnName = "id")
+    @JsonProperty("wallet_id")
+    private Wallet wallet;
 
     @Column(name = "is_enabled")
     private Boolean enabled = false;
