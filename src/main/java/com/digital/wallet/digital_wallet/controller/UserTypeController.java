@@ -1,11 +1,8 @@
 package com.digital.wallet.digital_wallet.controller;
 
-import com.digital.wallet.digital_wallet.dtos.Users.UserRegistration;
-import com.digital.wallet.digital_wallet.entity.Users.UserType;
-import com.digital.wallet.digital_wallet.entity.Users.Users;
+import com.digital.wallet.digital_wallet.entity.UserType;
 import com.digital.wallet.digital_wallet.response.BaseResponse;
 import com.digital.wallet.digital_wallet.response.ErrorResponse;
-import com.digital.wallet.digital_wallet.service.UserService;
 import com.digital.wallet.digital_wallet.service.UsersTypeService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;

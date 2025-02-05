@@ -1,14 +1,10 @@
 package com.digital.wallet.digital_wallet.service;
 
-import com.digital.wallet.digital_wallet.dtos.Users.UserRegistration;
-import com.digital.wallet.digital_wallet.entity.Users.UserType;
-import com.digital.wallet.digital_wallet.entity.Users.Users;
-import com.digital.wallet.digital_wallet.repository.user.UsersRepository;
-import com.digital.wallet.digital_wallet.repository.user.UsersTypeRepository;
+import com.digital.wallet.digital_wallet.entity.UserType;
+import com.digital.wallet.digital_wallet.repository.UsersTypeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 

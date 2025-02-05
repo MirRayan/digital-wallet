@@ -1,13 +1,9 @@
 package com.digital.wallet.digital_wallet.controller;
 
-import com.digital.wallet.digital_wallet.dtos.Users.RegistrationRequest;
-import com.digital.wallet.digital_wallet.dtos.Users.UserInfoResponse;
 import com.digital.wallet.digital_wallet.dtos.Users.UserRegistration;
-import com.digital.wallet.digital_wallet.entity.Users.Currency;
-import com.digital.wallet.digital_wallet.entity.Users.UserType;
-import com.digital.wallet.digital_wallet.entity.Users.Users;
-import com.digital.wallet.digital_wallet.entity.Users.Wallet;
-import com.digital.wallet.digital_wallet.exception.BadRequestException;
+import com.digital.wallet.digital_wallet.entity.Currency;
+import com.digital.wallet.digital_wallet.entity.Users;
+import com.digital.wallet.digital_wallet.entity.Wallet;
 import com.digital.wallet.digital_wallet.response.BaseResponse;
 import com.digital.wallet.digital_wallet.response.ErrorResponse;
 import com.digital.wallet.digital_wallet.service.CurrencyService;
@@ -18,7 +14,6 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;

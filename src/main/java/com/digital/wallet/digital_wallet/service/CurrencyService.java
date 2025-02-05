@@ -1,9 +1,7 @@
 package com.digital.wallet.digital_wallet.service;
 
-import com.digital.wallet.digital_wallet.entity.Users.Currency;
-import com.digital.wallet.digital_wallet.entity.Users.UserType;
-import com.digital.wallet.digital_wallet.repository.user.CurrencyRepository;
-import com.digital.wallet.digital_wallet.repository.user.UsersTypeRepository;
+import com.digital.wallet.digital_wallet.entity.Currency;
+import com.digital.wallet.digital_wallet.repository.CurrencyRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
