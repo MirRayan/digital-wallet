@@ -1,6 +1,5 @@
-package com.digital.wallet.digital_wallet.entity.Users;
+package com.digital.wallet.digital_wallet.entity;
 
-import com.digital.wallet.digital_wallet.entity.AuditEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

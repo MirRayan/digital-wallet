@@ -1,6 +1,5 @@
-package com.digital.wallet.digital_wallet.entity.Users;
+package com.digital.wallet.digital_wallet.entity;
 
-import com.digital.wallet.digital_wallet.entity.AuditEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

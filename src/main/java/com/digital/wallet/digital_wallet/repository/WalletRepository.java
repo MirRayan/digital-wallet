@@ -1,7 +1,6 @@
-package com.digital.wallet.digital_wallet.repository.user;
+package com.digital.wallet.digital_wallet.repository;
 
-import com.digital.wallet.digital_wallet.entity.Users.UserType;
-import com.digital.wallet.digital_wallet.entity.Users.Wallet;
+import com.digital.wallet.digital_wallet.entity.Wallet;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
