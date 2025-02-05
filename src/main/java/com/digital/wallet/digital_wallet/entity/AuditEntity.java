@@ -1,6 +1,9 @@
 package com.digital.wallet.digital_wallet.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +15,7 @@ import java.time.ZonedDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@MappedSuperclass
 public class AuditEntity {
 
     @Column(name = "created_on")
@@ -19,5 +23,16 @@ public class AuditEntity {
 
     @Column(name = "updated_on")
     private ZonedDateTime updatedOn;
+
+    @PrePersist
+    protected void onCreate() {
+        createdOn = ZonedDateTime.now();
+        updatedOn = ZonedDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedOn = ZonedDateTime.now();
+    }
 
 }
