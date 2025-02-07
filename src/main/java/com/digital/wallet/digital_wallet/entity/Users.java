@@ -7,6 +7,11 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 import static com.digital.wallet.digital_wallet.utls.StaticTextConfig.DB_SCHEMA;
 
@@ -14,7 +19,7 @@ import static com.digital.wallet.digital_wallet.utls.StaticTextConfig.DB_SCHEMA;
 @Table(name = "users", schema = DB_SCHEMA)
 @Getter
 @Setter
-public class Users extends AuditEntity {
+public class Users extends AuditEntity implements UserDetails {
 
     @Id
     @Column(name = "id")
@@ -31,9 +36,6 @@ public class Users extends AuditEntity {
     @Column(name = "password")
     @JsonProperty("password")
     @NotBlank(message = "Password is required.")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=?!])(?=\\S+$).{8,}$",
-            message = "Choose a password of at least seven characters, one special character, one uppercase letter and one number")
-    @Size(max = 20, message = "Field length should not greater than 20")
     private String password;
 
     @Column(name = "phoneNumber")
@@ -62,21 +64,38 @@ public class Users extends AuditEntity {
     @JsonProperty("wallet_id")
     private Wallet wallet;
 
-    @Column(name = "is_enabled")
-    private Boolean enabled = false;
-
-    @Column(name = "is_not_expired")
-    private Boolean accountNonExpired = true;
-
-    @Column(name = "is_not_locked")
-    private Boolean accountNonLocked = true;
-
-    @Column(name = "is_cred_not_expired")
-    private Boolean credentialsNonExpired = true;
-
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "user_type_id", referencedColumnName = "id")
     private UserType userType;
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

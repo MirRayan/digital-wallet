@@ -25,10 +25,11 @@ public class Wallet extends AuditEntity {
     @JsonProperty("amount")
     private int amount;
 
+    @Column(unique = true)
     @JsonProperty("user_id")
     private String userId;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne()
     @JoinColumn(name = "currency_id", referencedColumnName = "id")
     @JsonProperty("currency")
     private Currency currency;

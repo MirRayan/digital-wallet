@@ -1,5 +1,7 @@
 package com.digital.wallet.digital_wallet.controller;
 
+import com.digital.wallet.digital_wallet.dtos.Users.LoginResponse;
+import com.digital.wallet.digital_wallet.dtos.Users.LoginUserDto;
 import com.digital.wallet.digital_wallet.dtos.Users.UserRegistration;
 import com.digital.wallet.digital_wallet.entity.Currency;
 import com.digital.wallet.digital_wallet.entity.Users;
@@ -7,6 +9,7 @@ import com.digital.wallet.digital_wallet.entity.Wallet;
 import com.digital.wallet.digital_wallet.response.BaseResponse;
 import com.digital.wallet.digital_wallet.response.ErrorResponse;
 import com.digital.wallet.digital_wallet.service.CurrencyService;
+import com.digital.wallet.digital_wallet.service.JwtService;
 import com.digital.wallet.digital_wallet.service.UserService;
 import com.digital.wallet.digital_wallet.service.WalletService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,6 +29,7 @@ public class UserController {
     private final UserService userService;
     private final WalletService walletService;
     private final CurrencyService currencyService;
+    private final JwtService jwtService;
 
     @PostMapping("/registration")
     public ResponseEntity<?> userRegistration(@Valid @RequestBody UserRegistration userRegistration) {
@@ -37,30 +41,26 @@ public class UserController {
         } else {
 
             Wallet tempWallet = new Wallet();
-            Optional<Currency> currency = currencyService.findById("3398dbd7-70d1-4c5c-a100-bfdd62c94c06");
+            tempWallet.setAmount(0);
 
-            if (currency.isPresent()){
-                tempWallet.setCurrency(currency.get());
-                tempWallet.setAmount(0);
+            Optional<Currency> optionalCurrency = currencyService.findByAbbreviation("BDT");
 
-                Wallet wallet = walletService.createWallet(tempWallet);
-
-                Users convertToUser = userService.convertToUsers(userRegistration);
-                convertToUser.setWallet(wallet);
-
-                Users newUser = userService.addNewUser(convertToUser);
-
-                tempWallet.setUserId(newUser.getId());
-
-                walletService.updateWallet(wallet);
-
-                newUser = userService.updateUser(newUser);
-
-                return new ResponseEntity<>(new BaseResponse(newUser, HttpServletResponse.SC_CREATED, null), HttpStatus.OK);
-
+            if (optionalCurrency.isPresent()) {
+                tempWallet.setCurrency(optionalCurrency.get());
             } else {
-                return new ResponseEntity<>(new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST, "Currency not Available"), HttpStatus.BAD_REQUEST);
+                Currency newCurrency = new Currency();
+                newCurrency.setAbbreviation("BDT");
+                newCurrency.setName("Bangladesh Taka");
+
+                tempWallet.setCurrency(currencyService.createCurrency(newCurrency));
             }
+
+            Users convertToUser = userService.convertToUsers(userRegistration);
+            convertToUser.setWallet(tempWallet);
+
+            Users newUser = userService.addNewUser(convertToUser);
+
+            return new ResponseEntity<>(new BaseResponse(newUser, HttpServletResponse.SC_CREATED, null), HttpStatus.OK);
 
         }
 
@@ -107,6 +107,19 @@ public class UserController {
 
         }
 
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticate(@RequestBody LoginUserDto loginUserDto) {
+        Users authenticatedUser = userService.authenticate(loginUserDto);
+
+        String jwtToken = jwtService.generateToken(authenticatedUser);
+
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(jwtToken);
+        loginResponse.setExpiresIn(jwtService.getExpirationTime());
+
+        return new ResponseEntity<>(new BaseResponse(loginResponse, HttpServletResponse.SC_OK, null), HttpStatus.OK);
     }
 
 }
