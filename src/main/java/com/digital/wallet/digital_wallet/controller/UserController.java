@@ -45,9 +45,9 @@ public class UserController {
 
             Optional<Currency> optionalCurrency = currencyService.findByAbbreviation("BDT");
 
-            if (optionalCurrency.isPresent()) {
+            /*if (optionalCurrency.isPresent()) {*/
                 tempWallet.setCurrency(optionalCurrency.get());
-            } else {
+            /*} else*/ {
                 Currency newCurrency = new Currency();
                 newCurrency.setAbbreviation("BDT");
                 newCurrency.setName("Bangladesh Taka");
