@@ -35,9 +35,9 @@ public class UserService {
 
     public Users updateUser(Users users) {
 
-        Users savedUser = addNewUser(users);
+        Users updatedUser = addNewUser(users);
 
-        return savedUser;
+        return updatedUser;
 
     }
 
